@@ -1,0 +1,70 @@
+<div class="token">
+  <mat-card-content>
+    <form>
+      <mat-form-field >
+        <input matInput #token placeholder="Token do pipedrive">
+      </mat-form-field>
+
+      <button mat-button (click)="applyToken(token.value)">Aplicar</button>
+    </form>
+  </mat-card-content>
+</div>
+
+<button *ngIf="pipedriveToken" mat-raised-button (click)="openNewCarDialog()">Novo carro</button>
+<div>
+  <mat-card *ngIf="cars" class="cars">
+    <mat-card-content *ngIf="cars.length>0">
+      <mat-nav-list class="car-list">
+        <h4 mat-subheader>Carros</h4>
+        <a mat-list-item
+           *ngFor="let car of cars"
+           [class.selected]="car === selectedCar"
+           (click)="onSelect(car)"
+        >{{car.model}}</a>
+      </mat-nav-list>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="car-detail" *ngIf="selectedCar && prospects">
+    <mat-card-subtitle>Detalhes</mat-card-subtitle>
+    <form>
+      <mat-form-field>
+        <input matInput value="{{selectedCar.id}}" placeholder="Id" disabled>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select #prospect placeholder="Usuário pipedrive" [value]="selectedCar.personId" name="prospect" required>
+          <mat-option *ngFor="let prospect of prospects"
+                      [value]="prospect.id">
+            {{ prospect.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input #model matInput value="{{selectedCar.model}}" name="model" placeholder="Modelo" required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select #year placeholder="Ano" [value]="selectedCar.year" name="year" required>
+          <mat-option *ngFor="let year of years"
+                      [value]="year.value">
+            {{ year.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select #color placeholder="Cor" [value]="selectedCar.color" name="color" required>
+          <mat-option *ngFor="let color of colors"
+                      [value]="color.value">
+            {{ color.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-button (click)="update(prospect.value, model.value, year.value, color.value)">Salvar</button>
+      <button mat-button (click)="delete()">Remover</button>
+    </form>
+  </mat-card>
+</div>
