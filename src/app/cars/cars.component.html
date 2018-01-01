@@ -10,7 +10,7 @@
   </mat-card-content>
 </div>
 
-<button *ngIf="pipedriveToken" mat-raised-button (click)="openNewCarDialog()">Novo carro</button>
+<button *ngIf="prospects" mat-raised-button (click)="openNewCarDialog()">Novo carro</button>
 <div>
   <mat-card *ngIf="cars" class="cars">
     <mat-card-content *ngIf="cars.length>0">

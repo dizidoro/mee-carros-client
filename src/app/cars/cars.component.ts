@@ -9,7 +9,7 @@ import {NewCarComponent} from '../new-car/new-car.component';
 
 import {CarService} from '../car.service';
 import {ProspectService} from '../prospect.service';
-
+import {BasicCar} from '../basic-car';
 
 @Component({
   selector: 'app-cars',
@@ -19,7 +19,7 @@ import {ProspectService} from '../prospect.service';
 export class CarsComponent implements OnInit {
   newCarDialogRef: MatDialogRef<NewCarComponent>;
 
-  cars: Car[];
+  cars: BasicCar[];
   prospects: Prospect[];
   colors = Color.colors;
   years = Year.years;
@@ -34,10 +34,9 @@ export class CarsComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.init('fd5ee3c2519b3353b2f344a4c125a4e2fea4c396');
   }
 
-  onSelect(car: Car): void {
+  onSelect(car: BasicCar): void {
     this.carService.get(car.id).subscribe(c => this.selectedCar = c);
   }
 
@@ -56,12 +55,14 @@ export class CarsComponent implements OnInit {
 
 
   update(personId: number, model: string, year: number, color: string): void {
-    const car = {id: this.selectedCar.id, personId: personId, model: model, year: year, color: color};
-    this.carService.update(car as Car).subscribe(() => {
+    const carToUpdate = {id: this.selectedCar.id, personId: personId, model: model, year: year, color: color};
+    this.carService.update(carToUpdate as Car).subscribe(() => {
       this.selectedCar.personId = personId;
       this.selectedCar.model = model;
       this.selectedCar.year = year;
       this.selectedCar.color = color;
+      const updatedCar = this.cars.find(car => car.id === carToUpdate.id);
+      updatedCar.model = model;
     });
   }
 
@@ -69,14 +70,11 @@ export class CarsComponent implements OnInit {
 
     this.carService.add(newCar).subscribe(id => {
       console.log(id);
-      const newCarCopy: Car = {
+      const car: BasicCar = {
         id: id.id,
-        personId: newCar.personId,
-        year: newCar.year,
-        model: newCar.model,
-        color: newCar.color
+        model: newCar.model
       };
-      this.cars.push(newCarCopy);
+      this.cars.push(car);
     });
   }
 

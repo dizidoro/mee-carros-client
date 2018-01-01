@@ -2,11 +2,11 @@ import {Injectable} from '@angular/core';
 import {Car} from './car';
 import {Observable} from 'rxjs/Observable';
 import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
+import {BasicCar} from './basic-car';
 
 
 @Injectable()
 export class CarService {
-  private pipedriveToken = 'fd5ee3c2519b3353b2f344a4c125a4e2fea4c396';
 
   params = new HttpParams().set('pipedrive_token', 'fd5ee3c2519b3353b2f344a4c125a4e2fea4c396');
 
@@ -22,13 +22,13 @@ export class CarService {
   }
 
   createCarRepository(pipedriveToken): Observable<any> {
-    this.params = new HttpParams().set('pipedrive_token', 'fd5ee3c2519b3353b2f344a4c125a4e2fea4c396');
+    this.params = new HttpParams().set('pipedrive_token', pipedriveToken);
     const url = this.allCarsURL + '/create';
     return this.http.post<any>(url, null, {params: this.params});
   }
 
-  getAll(): Observable<Car[]> {
-    return this.http.get<Car[]>(this.allCarsURL, {params: this.params});
+  getAll(): Observable<BasicCar[]> {
+    return this.http.get<BasicCar[]>(this.allCarsURL, {params: this.params});
   }
 
   get(id: number): Observable<Car> {
@@ -37,14 +37,12 @@ export class CarService {
   }
 
   add(car: Car): Observable<Car> {
-    console.log('entrou');
-    console.log(car);
     return this.http.post<Car>(this.carURL, car, this.httpOptions);
   }
 
-  update(car: Car): Observable<Car> {
+  update(car: Car): Observable<any> {
     const url = this.carURL + '/' + car.id;
-    return this.http.put<Car>(url, car, this.httpOptions);
+    return this.http.put(url, car, this.httpOptions);
   }
 
   delete(id: number): Observable<any> {
